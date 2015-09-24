@@ -27,7 +27,7 @@ max_allowed_packet             = 16M
 
 [mysqld_safe]
 
-open_files_limit               = 8192                                # You possibly have to adapt your O/S settings as well
+open_files_limit               = 3000                                # You possibly have to adapt your O/S settings as well
 user                           = mysql
 log-error                      = hostname_error.log
 
@@ -46,25 +46,26 @@ default_storage_engine         = InnoDB                              # Defaults 
 # collation_server               = utf8_general_ci
 
 
-max_connections                = 505                                 # Values < 1000 are typically good
-max_user_connections           = 500                                 # Limit one specific user/application
+max_connections                = 125                                 # Values < 1000 are typically good
+max_user_connections           = 125                                 # Limit one specific user/application
 thread_cache_size              = 505                                 # Up to max_connections makes sense
 
 
 # Query Cache
 
 query_cache_type               = 1                                   # Set to 0 to avoid global QC Mutex
-query_cache_size               = 64M                                 # Avoid too big (> 128M) QC because of QC clean-up lock!
+query_cache_size               = 128M                                 # Avoid too big (> 128M) QC because of QC clean-up lock!
+query_cache_limit              = 8M                              
 
 
 # Session variables
 
 sort_buffer_size               = 512K                                 # Could be too big for many small sorts
-tmp_table_size                 = 32M                                 # Make sure your temporary results do NOT contain BLOB/TEXT attributes
+tmp_table_size                 = 128M                                 # Make sure your temporary results do NOT contain BLOB/TEXT attributes
 
 read_buffer_size               = 256K                                # Resist to change this parameter if you do not know what you are doing
 read_rnd_buffer_size           = 512K                                # Resist to change this parameter if you do not know what you are doing
-join_buffer_size               = 128k                                # Resist to change this parameter if you do not know what you are doing
+join_buffer_size               = 512K                                # Resist to change this parameter if you do not know what you are doing
 
 
 # Other buffers and caches
@@ -133,7 +134,7 @@ myisam_sort_buffer_size = 8M
 
 # MEMORY variables
 
-max_heap_table_size            = 64M                                 # Should be greater or equal to tmp_table_size
+max_heap_table_size            = 128M                                 # Should be greater or equal to tmp_table_size
 
 
 # InnoDB variables
