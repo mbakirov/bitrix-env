@@ -1,0 +1,43 @@
+cli:
+  build: docker/cli
+  volumes:
+    - ./:/app
+  working_dir: /app
+  expose:
+    - 9000
+  links:
+    - db
+
+fpm:
+  build: docker/fpm
+  volumes_from:
+    - cli
+  expose:
+    - 9000
+  links:
+    - db
+  environment:
+    XDEBUG_CONFIG: "idekey=PHPSTORM remote_enable=On remote_host=172.17.42.1"
+
+nginx:
+  image: nginx:latest
+  ports:
+    - "80:80"
+  volumes:
+    - ./:/app
+    - ./docker/nginx/vhost.conf:/etc/nginx/conf.d/vhost.conf
+  links:
+    - fpm
+
+db:
+  build: docker/db
+  volumes:
+    - /var/lib/mysql
+    - ./docker/db/bitrix.cnf:/etc/mysql/conf.d/bitrix.cnf
+  ports:
+    - "127.0.0.1:33060:3306"
+  environment:
+    MYSQL_ROOT_PASSWORD: root
+    MYSQL_DATABASE: bitrix
+    MYSQL_USER: root
+    MYSQL_PASSWORD: root
